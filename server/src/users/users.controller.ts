@@ -14,11 +14,10 @@ export class UsersController {
     await this.usersService.create(body);
   }
 
-  // protected route
   @Get()
   @UseGuards(JwtAuthGuard)
-  async getUsers(@CurrentUser() user: User) {
-    console.log(user);
-    return this.usersService.getUsers();
+  getUsers(@CurrentUser() user: User) {
+    const { email, name } = user;
+    return [{ email, name }];
   }
 }
