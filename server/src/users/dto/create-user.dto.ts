@@ -7,6 +7,16 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @IsStrongPassword()
+  @IsStrongPassword(
+    {},
+    {
+      message:
+        'Password must contain:\n' +
+        '- At least 8 characters\n' +
+        '- One uppercase letter\n' +
+        '- One number\n' +
+        '- One special character',
+    },
+  )
   password: string;
 }

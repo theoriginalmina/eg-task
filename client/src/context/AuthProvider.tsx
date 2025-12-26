@@ -23,6 +23,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     fetchMe();
   }, []);
 
+  const register = async (name: string, email: string, password: string) => {
+    await api.post("/users", { name, email, password });
+  };
+
   const login = async (email: string, password: string) => {
     await api.post("/auth/login", { email, password });
     await fetchMe();
@@ -38,9 +42,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return res.data;
   };
 
+  const updateUser = async (name: string, email: string) => {
+    await api.put("/users", { name, email });
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated, isLoading, login, logout, fetchUser }}
+      value={{
+        user,
+        isAuthenticated,
+        isLoading,
+        login,
+        logout,
+        fetchUser,
+        register,
+        updateUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -25,7 +25,8 @@ export class UsersService {
 
   async getUser(query: QueryFilter<User>) {
     const user = (await this.userModel.findOne(query))?.toObject();
-    if (!user) {
+
+    if (user === undefined) {
       throw new NotFoundException('User not found');
     }
     return user;

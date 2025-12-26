@@ -65,13 +65,14 @@ export class AuthService {
       const user = await this.usersService.getUser({
         email,
       });
+
       const authenticated = await compare(password, user.password);
       if (!authenticated) {
-        throw new UnauthorizedException();
+        throw new UnauthorizedException('Credentials are not valid');
       }
       return user;
-    } catch {
-      throw new UnauthorizedException('Credentials are not valid');
+    } catch (error) {
+      throw new UnauthorizedException(error);
     }
   }
 
@@ -80,11 +81,22 @@ export class AuthService {
       const user = await this.usersService.getUser({ _id: userId });
       const authenticated = await compare(refreshToken, user.refreshToken!);
       if (!authenticated) {
-        throw new UnauthorizedException();
+        throw new UnauthorizedException('Refresh token is not valid.');
       }
       return user;
-    } catch {
-      throw new UnauthorizedException('Refresh token is not valid.');
+    } catch (error) {
+      throw new UnauthorizedException(error);
     }
+  }
+
+  async logout(user: User) {
+    await this.usersService.updateUser(
+      {
+        _id: user._id,
+      },
+      {
+        $set: { refreshToken: '' },
+      },
+    );
   }
 }
